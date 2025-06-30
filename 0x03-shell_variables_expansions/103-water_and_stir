@@ -38,4 +38,3 @@ dec_water=$(to_decimal "$WATER" "$base_water")
 dec_stir=$(to_decimal "$STIR" "$base_stir")
 sum=$((dec_water + dec_stir))
 from_decimal "$sum" "$base_bestchol"
-
