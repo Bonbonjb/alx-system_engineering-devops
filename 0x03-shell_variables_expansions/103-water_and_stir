@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $((2#$(echo $WATER | tr 'ewatr' 32014)+3#$(echo $STIR | tr 'stir' 0123))) | tr 01234567 bestchol
+echo $((5#$((10#$(echo $WATER | tr 'ewatr' 30124)))) + $((4#$((10#$(echo $STIR | tr 'stir' 0123)))))) | tr 01234567 bestchol
