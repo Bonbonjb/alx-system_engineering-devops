@@ -1,2 +1,2 @@
 #!/bin/bash
-trap 'eval "echo \$(( \${WATER//[!water]/?([w])0+([a])1+([t])2+([e])3+([r])4} + \${STIR//[!ti.r]/?([t])3+([i])1+([.])0+([r])2} ))"' EXIT
+echo $(( $(echo "$WATER" | tr 'ewatr' '01234') + $(echo "$STIR" | tr 'tsir' '0123') )) | tr '01234567' 'bestchol'
