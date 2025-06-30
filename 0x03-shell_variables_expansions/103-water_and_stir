@@ -1,2 +1,2 @@
 #!/bin/bash
-trap 'eval "${WATER//[!water]/$(printf "%s=" $(tr -d -c water <<<"$WATER") | tr water 01234)} + ${STIR//[!ti.r]/$(tr ti.r 0123 <<<"$STIR")}"; printf "%o" "$REPLY"' 0;trap '' 0
+trap 'eval "echo \$(( \${WATER//[!water]/?([w])0+([a])1+([t])2+([e])3+([r])4} + \${STIR//[!ti.r]/?([t])3+([i])1+([.])0+([r])2} ))"' EXIT
