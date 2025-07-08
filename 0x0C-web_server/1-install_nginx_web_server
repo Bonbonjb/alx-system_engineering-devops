@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Installs nginx, starts the service, and sets up a Hello World page
+
+# Exit on any error
+set -e
+
+# Update package list and install nginx
+apt-get update -y
+apt-get install nginx -y
+
+# Start nginx using service (systemctl not allowed)
+service nginx start || service nginx restart
+
+# Overwrite the default nginx page with "Hello World!"
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
