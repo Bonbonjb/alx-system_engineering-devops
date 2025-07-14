@@ -1,1 +1,26 @@
+#!/usr/bin/env bash
+# Script that displays DNS info about subdomains of a domain
 
+domain=$1
+subdomain=$2
+
+print_info() {
+    local sub=$1
+    record=$(dig +short "$sub.$domain")
+    if [ -n "$record" ]; then
+        echo "The subdomain $sub is a A record and points to $record"
+    fi
+}
+
+if [ -z "$domain" ]; then
+    echo "Usage: $0 DOMAIN [SUBDOMAIN]"
+    exit 1
+fi
+
+if [ -n "$subdomain" ]; then
+    print_info "$subdomain"
+else
+    for sub in www lb-01 web-01 web-02; do
+        print_info "$sub"
+    done
+fi
