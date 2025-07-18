@@ -1,17 +1,27 @@
 #!/usr/bin/env bash
-# Sets up web server with redirect and custom header
+# Configures a new Ubuntu machine: installs Nginx, sets hostname, adds a custom X-Served-By header
+
+# Set hostname (change YOUR_ID accordingly)
+HOSTNAME=$(hostname)
+if [[ "$HOSTNAME" != *"web"* ]]; then
+  if [ "$(hostname -I | awk '{print $1}')" == "IP_OF_WEB_01" ]; then
+    sudo hostnamectl set-hostname YOUR_ID-web-01
+  else
+    sudo hostnamectl set-hostname YOUR_ID-web-02
+  fi
+fi
 
 # Install nginx
 sudo apt-get update -y
 sudo apt-get install -y nginx
 
-# Setup basic index
-echo "Hello World!" | sudo tee /var/www/html/index.html
+# Set up index.html
+echo "Hello World from $(hostname)!" | sudo tee /var/www/html/index.html
 
-# Allow HTTP
+# Allow HTTP through UFW
 sudo ufw allow 'Nginx HTTP'
 
-# Replace Nginx default config
+# Configure nginx with custom header
 sudo tee /etc/nginx/sites-available/default > /dev/null <<EOF
 server {
     listen 80 default_server;
