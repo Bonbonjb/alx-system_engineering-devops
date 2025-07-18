@@ -25,7 +25,7 @@ defaults
 
 frontend http-in
     bind *:80
-    default_backend web_back
+    default_backend web_backend
 
 backend web_backend
     balance roundrobin
