@@ -1,19 +1,19 @@
-# 7-puppet_install_nginx_web_server.pp
-
 package { 'nginx':
   ensure => installed,
 }
 
 service { 'nginx':
-  ensure => running,
-  enable => true,
-  require => Package['nginx'],
+  ensure     => running,
+  enable     => true,
+  hasrestart => true,
 }
 
 file { '/var/www/html/index.html':
   ensure  => file,
-  content => 'Hello World!',
-  require => Package['nginx'],
+  content => "Hello World!\n",
+  owner   => 'www-data',
+  group   => 'www-data',
+  mode    => '0644',
 }
 
 file { '/etc/nginx/sites-available/default':
@@ -32,11 +32,10 @@ server {
         try_files \$uri \$uri/ =404;
     }
 
-    location = /redirect_me {
+    location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
 }
-    | EOF
-  require => Package['nginx'],
+  | EOF
   notify  => Service['nginx'],
 }
