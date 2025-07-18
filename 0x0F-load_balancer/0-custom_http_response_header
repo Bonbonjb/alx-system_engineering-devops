@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 # Configures a new Ubuntu machine: installs Nginx, sets hostname, adds a custom X-Served-By header
 
-# Set hostname (change YOUR_ID accordingly)
 HOSTNAME=$(hostname)
 if [[ "$HOSTNAME" != *"web"* ]]; then
-  if [ "$(hostname -I | awk '{print $1}')" == "IP_OF_WEB_01" ]; then
-    sudo hostnamectl set-hostname YOUR_ID-web-01
+  if [ "$(hostname -I | awk '{print $1}')" == "44.201.253.240:80" ]; then
+    sudo hostnamectl set-hostname 1302547-web-01  
   else
-    sudo hostnamectl set-hostname YOUR_ID-web-02
+    sudo hostnamectl set-hostname 1302547-web-02
   fi
 fi
 
