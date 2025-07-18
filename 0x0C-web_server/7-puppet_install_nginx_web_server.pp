@@ -1,26 +1,24 @@
-class nginx_web {
-  package { 'nginx':
-    ensure => installed,
-  }
+# 7-puppet_install_nginx_web_server.pp
 
-  service { 'nginx':
-    ensure     => running,
-    enable     => true,
-    require    => Package['nginx'],
-  }
-
-  file { '/var/www/html/index.nginx-debian.html':
-    ensure  => file,
-    content => "Hello World!\n",
-    require => Package['nginx'],
-  }
-
-  file { '/etc/nginx/sites-available/default':
-    ensure  => file,
-    content => template('nginx_web/default.erb'),
-    require => Package['nginx'],
-    notify  => Service['nginx'],
-  }
+package { 'nginx':
+  ensure => installed,
 }
 
-include nginx_web
+service { 'nginx':
+  ensure => running,
+  enable => true,
+  require => Package['nginx'],
+}
+
+file { '/var/www/html/index.html':
+  ensure  => file,
+  content => 'Hello World!',
+  require => Package['nginx'],
+}
+
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => template('nginx_web/default.erb'),
+  require => Package['nginx'],
+  notify  => Service['nginx'],
+}
