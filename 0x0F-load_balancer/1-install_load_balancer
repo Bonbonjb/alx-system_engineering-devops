@@ -27,7 +27,7 @@ frontend http-in
     bind *:80
     default_backend web_back
 
-backend web_back
+backend web_backend
     balance roundrobin
     server web-01 44.201.253.240:80 check
     server web-02 3.91.102.6:80 check
