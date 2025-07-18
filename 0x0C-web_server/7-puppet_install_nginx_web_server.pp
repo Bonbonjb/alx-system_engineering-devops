@@ -2,15 +2,9 @@ package { 'nginx':
   ensure => installed,
 }
 
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  hasrestart => true,
-}
-
 file { '/var/www/html/index.html':
   ensure  => file,
-  content => "Hello World!\n",
+  content => 'Hello World!',
   owner   => 'www-data',
   group   => 'www-data',
   mode    => '0644',
@@ -24,18 +18,25 @@ server {
     listen [::]:80 default_server;
 
     root /var/www/html;
-    index index.html index.htm;
+    index index.html;
 
     server_name _;
-
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
 
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
 }
   | EOF
   notify  => Service['nginx'],
+}
+
+service { 'nginx':
+  ensure     => running,
+  enable     => true,
+  hasrestart => true,
+  hasstatus  => true,
 }
