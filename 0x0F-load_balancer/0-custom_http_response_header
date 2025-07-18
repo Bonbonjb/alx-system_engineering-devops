@@ -21,6 +21,8 @@ echo "Hello World from $(hostname)!" | sudo tee /var/www/html/index.html
 sudo ufw allow 'Nginx HTTP'
 
 # Configure nginx with custom header
+HOSTNAME=$(hostname)
+
 sudo tee /etc/nginx/sites-available/default > /dev/null <<EOF
 server {
     listen 80 default_server;
@@ -32,12 +34,12 @@ server {
     server_name _;
 
     location / {
-        add_header X-Served-By \$hostname;
+        add_header X-Served-By $HOSTNAME;
         try_files \$uri \$uri/ =404;
     }
 
     location = /redirect_me {
-        add_header X-Served-By \$hostname;
+        add_header X-Served-By $HOSTNAME;
         return 301 https://www.blog.ehoneahobed.com;
     }
 }
