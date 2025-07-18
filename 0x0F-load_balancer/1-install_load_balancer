@@ -37,3 +37,6 @@ EOF
 sudo service haproxy restart
 
 # msg output : "web-01 44.201.253.240:80", "web-02"
+# X-Served-By: 1302547-web-01
+# X-Served-By: 1302547-web-02
+
