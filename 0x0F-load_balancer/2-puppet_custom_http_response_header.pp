@@ -10,35 +10,9 @@ service { 'nginx':
   hasrestart => true,
 }
 
-file { '/var/www/html/index.html':
-  ensure  => file,
-  content => 'Hello World!',
+exec { 'set custom header':
+  command => 'sed -i "/location \/ {/a\\        add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
+  unless  => 'grep -q "add_header X-Served-By" /etc/nginx/sites-available/default',
+  notify  => Service['nginx'],
   require => Package['nginx'],
 }
-
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => @(EOF),
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.html index.htm;
-
-    server_name _;
-
-    location / {
-        add_header X-Served-By \$hostname;
-        try_files \$uri \$uri/ =404;
-    }
-
-    location = /redirect_me {
-        add_header X-Served-By \$hostname;
-        return 301 https://www.blog.ehoneahobed.com;
-    }
-}
-    | EOF
-  notify  => Service['nginx'],
-}
-
