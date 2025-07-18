@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
-# Configure Nginx so that its HTTP response contains a custom header (on web-01 and web-02)
-# The name of the custom HTTP header must be X-Served-By
-# The value of the custom HTTP header must be the hostname of the server Nginx is running on
+# Adds custom header and redirect to Nginx config
 
-# Install nginx if not already installed
+# Install nginx if not installed
 sudo apt-get update
 sudo apt-get -y install nginx
 
-# Allow HTTP traffic through firewall
-sudo ufw allow 'Nginx HTTP'
+# Add the X-Served-By header to the default config
+sudo sed -i '/server_name _;/a \\tadd_header X-Served-By \$hostname;' /etc/nginx/sites-enabled/default
 
-# Create necessary directory and default page
-sudo mkdir -p /var/www/html
-sudo chmod -R 755 /var/www
-echo 'Hello World!' | sudo tee /var/www/html/index.html
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
-
-# Configure custom header and redirect for /redirect_me
-sudo sed -i '/server_name _;/a \\tadd_header X-Served-By \$hostname;\n\n\tlocation = /redirect_me {\n\t\tadd_header X-Served-By \$hostname;\n\t\treturn 301 https://www.blog.ehoneahobed.com;\n\t}' /etc/nginx/sites-enabled/default
-
-# Configure custom 404 page
-sudo sed -i '/listen 80 default_server;/a \terror_page 404 /404.html;\n\tlocation = /404.html {\n\t\troot /var/www/html;\n\t\tinternal;\n\t}' /etc/nginx/sites-enabled/default
+# Add a location block for /redirect_me after server_name if not present
+if ! grep -q "location = /redirect_me" /etc/nginx/sites-enabled/default; then
+    sudo sed -i '/server_name _;/a \\n\tlocation = /redirect_me {\n\t\treturn 301 https://www.blog.ehoneahobed.com;\n\t}' /etc/nginx/sites-enabled/default
+fi
 
 # Restart nginx
 sudo service nginx restart
