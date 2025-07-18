@@ -1,30 +1,38 @@
 #!/usr/bin/env bash
-# Set up Nginx with custom header and redirect
+# Sets up web server with redirect and custom header
 
-sudo apt-get update
-sudo apt-get -y install nginx
+# Install nginx
+sudo apt-get update -y
+sudo apt-get install -y nginx
 
-# Allow HTTP through firewall
+# Setup basic index
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Allow HTTP
 sudo ufw allow 'Nginx HTTP'
 
-# Ensure basic web root exists
-sudo mkdir -p /var/www/html
-sudo chmod -R 755 /var/www
-echo 'Hello World!' | sudo tee /var/www/html/index.html
+# Replace Nginx default config
+sudo tee /etc/nginx/sites-available/default > /dev/null <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
-# Clean previous edits if re-running
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+    root /var/www/html;
+    index index.html index.htm;
 
-# Insert X-Served-By header in main location and redirect
-sudo sed -i '/server_name _;/a \
-\tlocation / {\n\
-\t\tadd_header X-Served-By \$hostname;\n\
-\t}\n\
-\n\
-\tlocation = /redirect_me {\n\
-\t\tadd_header X-Served-By \$hostname;\n\
-\t\treturn 301 https://www.blog.ehoneahobed.com;\n\
-\t}' /etc/nginx/sites-available/default
+    server_name _;
+
+    location / {
+        add_header X-Served-By \$hostname;
+        try_files \$uri \$uri/ =404;
+    }
+
+    location = /redirect_me {
+        add_header X-Served-By \$hostname;
+        return 301 https://www.blog.ehoneahobed.com;
+    }
+}
+EOF
 
 # Restart Nginx
 sudo service nginx restart
