@@ -21,3 +21,7 @@ file_line { 'Turn off passwd auth':
   line   => '    PasswordAuthentication no',
   match  => '^\s*PasswordAuthentication',
 }
+# Notice: Compiled catalog for ubuntu-xenial in environment production in 0.11 seconds
+# Notice: /Stage[main]/Main/File_line[Turn off passwd auth]/ensure: created
+# Notice: /Stage[main]/Main/File_line[Declare identity file]/ensure: created
+# Notice: Finished catalog run in 0.03 seconds
