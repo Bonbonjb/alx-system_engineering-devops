@@ -47,3 +47,6 @@ EOF
 
 # Restart Nginx
 sudo service nginx restart
+
+# X-Served-By: 1302547-web-01
+# X-Served-By: 1302547-web-02
