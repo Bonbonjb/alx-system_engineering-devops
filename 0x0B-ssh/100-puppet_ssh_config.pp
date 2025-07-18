@@ -1,34 +1,15 @@
-# Ensure .ssh directory exists
-file { '/home/ubuntu/.ssh':
-  ensure  => 'directory',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  mode    => '0700',
+file { '/home/brendajb/.ssh':
+  ensure => 'directory',
+  mode   => '0700',
+  owner  => 'brendajb',
+  group  => 'brendajb',
 }
 
-# Ensure the config file exists
-file { '/home/ubuntu/.ssh/config':
+file { '/home/brendajb/.ssh/config':
   ensure  => 'file',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
+  content => "Host github.com\n  IdentityFile ~/.ssh/id_rsa\n  PasswordAuthentication no\n",
+  owner   => 'brendajb',
+  group   => 'brendajb',
   mode    => '0600',
-  require => File['/home/ubuntu/.ssh'],
-}
-
-# Add IdentityFile declaration
-file_line { 'Declare identity file':
-  ensure  => present,
-  path    => '/home/ubuntu/.ssh/config',
-  line    => '    IdentityFile /home/ubuntu/.ssh/school',
-  match   => '^\s*IdentityFile',
-  require => File['/home/ubuntu/.ssh/config'],
-}
-
-# Turn off password authentication
-file_line { 'Turn off passwd auth':
-  ensure  => present,
-  path    => '/home/ubuntu/.ssh/config',
-  line    => '    PasswordAuthentication no',
-  match   => '^\s*PasswordAuthentication',
-  require => File['/home/ubuntu/.ssh/config'],
+  require => File['/home/brendajb/.ssh'],
 }
