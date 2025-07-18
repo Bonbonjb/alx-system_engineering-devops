@@ -35,6 +35,3 @@ EOF
 
 # Restart HAProxy
 sudo service haproxy restart
-
-# X-Served-By: web-01 44.201.253.240:80
-# X-Served-By: 1302547-web-02 3.91.102.6:80
