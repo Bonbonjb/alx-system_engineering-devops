@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $(( $(echo "$WATER" | tr 'water' '01234') + $(echo "$STIR" | tr 'stir' '0123') )) | tr '01234567' 'bestchol'
+awk -v w="$WATER" -v s="$STIR" 'BEGIN{bw="water";bs="tir.";bo="shtbeolhc";for(i=1;i<=length(w);i++)a=a*5+index(bw,substr(w,i,1))-1;for(i=1;i<=length(s);i++)b=b*4+index(bs,substr(s,i,1))-1;n=a+b;do{r=substr(bo,n%9+1,1)r;n=int(n/9)}while(n);print r}'
