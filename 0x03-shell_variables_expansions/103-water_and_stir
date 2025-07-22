@@ -1,2 +1,2 @@
 #!/bin/bash
-awk -v w="$WATER" -v s="$STIR" 'BEGIN{bw="water";bs="tir.";bo="shtbeolhc";for(i=1;i<=length(w);i++)a=a*5+index(bw,substr(w,i,1))-1;for(i=1;i<=length(s);i++)b=b*4+index(bs,substr(s,i,1))-1;n=a+b;do{r=substr(bo,n%9+1,1)r;n=int(n/9)}while(n);print r}'
+awk -v a="$WATER" -v b="$STIR" 'BEGIN{w="water" s="tir." o="shtbeolhc" for(i=1;i<=length(a);i++)x=x*5+index(w,substr(a,i,1))-1 for(i=1;i<=length(b);i++)y=y*4+index(s,substr(b,i,1))-1 n=x+y while(n){r=substr(o,n%9+1,1) r;n=int(n/9)} if(r=="")r=substr(o,1,1) print r}'
