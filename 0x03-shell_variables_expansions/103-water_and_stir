@@ -1,3 +1,2 @@
 #!/bin/bash
-n=$(( $(echo $WATER | tr 'water' 01234) + $(echo $STIR | tr 'stir' 0123) ))
-digits= bestchol="bestchol" while [ $n -gt 0 ]; do d=$(( n % 9 )) digits=${bestchol:$d:1}$digits n=$(( n / 9 )); done; [ -z "$digits" ] && digits=${bestchol:0:1}; echo $digits
+printf '%o\n' $(( 5#$( echo $WATER | tr water 01234) + 5#$( echo $STIR | tr stir. 01234 ) )) | tr 01234567 behlnort
