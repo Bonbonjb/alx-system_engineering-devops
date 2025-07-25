@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Script to configure port forwarding from 8080 to 80 using UFW on web-01
+
+# Ensure UFW is installed
+apt-get update
+apt-get install -y ufw
+
+# Enable IP forwarding
+sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/ufw/sysctl.conf
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# Add NAT rule to before.rules (only if it hasn't been added)
+RULE_FILE="/etc/ufw/before.rules"
+if ! grep -q "Redirect 8080 to 80" "$RULE_FILE"; then
+cat << 'EOF' | tee -a "$RULE_FILE"
+
+# Redirect 8080 to 80
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
+COMMIT
+EOF
+fi
+
+# Reload UFW
+ufw reload
