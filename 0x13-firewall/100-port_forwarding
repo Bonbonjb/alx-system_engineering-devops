@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Script to configure port forwarding from 8080 to 80 using UFW on web-01
 
-# Ensure UFW is installed
+# UFW is installed
 apt-get update
 apt-get install -y ufw
 
