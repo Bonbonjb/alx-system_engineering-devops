@@ -15,10 +15,3 @@ sudo ufw enable
 
 # Check status and rules
 sudo ufw status verbose
-
-"""
-telnet web-01-IP 22    # Should connect
-telnet web-01-IP 80    # Should connect
-telnet web-01-IP 443   # Should connect
-telnet web-01-IP 21    # Should hang or fail (filtered)
-"""
