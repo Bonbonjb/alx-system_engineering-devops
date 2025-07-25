@@ -1,18 +1,26 @@
 #!/usr/bin/env bash
-#Configure your domain zone so that the subdomain www and display information about subdomains
+# Script that displays DNS info about subdomains of a domain
 
-if [ "$#" = 1 ]
-then
-    subdomains=("www" "lb-01" "web-01" "web-02")
-    for sub_domain in "${subdomains[@]}"
-    do
-	record_type=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
-        destination=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
-	echo "The subdomain $sub_domain is a $record_type record and points to $destination"
+domain=$1
+subdomain=$2
+
+print_info() {
+    local sub=$1
+    record=$(dig +short "$sub.$domain")
+    if [ -n "$record" ]; then
+        echo "The subdomain $sub is a A record and points to $record"
+    fi
+}
+
+if [ -z "$domain" ]; then
+    echo "Usage: $0 DOMAIN [SUBDOMAIN]"
+    exit 1
+fi
+
+if [ -n "$subdomain" ]; then
+    print_info "$subdomain"
+else
+    for sub in www lb-01 web-01 web-02; do
+        print_info "$sub"
     done
-elif [ "$#" = 2 ]
-then
-    record_type=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
-    destination=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
-    echo "The subdomain $2 is a $record_type record and points to $destination"
 fi
