@@ -1,24 +1,24 @@
-#!/usr/bin/env bash
-# Script to configure firewall on web-01 to allow only ports 22, 80, 443
+# Install UFW if not already installed
+sudo apt-get update
+sudo apt-get install ufw -y
 
-# Install UFW if not installed
-if ! command -v ufw &> /dev/null; then
-  apt-get update
-  apt-get install ufw -y
-fi
+# Set default policy to deny all incoming traffic
+sudo ufw default deny incoming
 
-# Reset UFW and set defaults
-ufw --force reset
-ufw default deny incoming
-ufw default allow outgoing
-
-# Allow required TCP ports
-ufw allow 22/tcp
-ufw allow 80/tcp
-ufw allow 443/tcp
+# Allow only specific ports
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
 
 # Enable UFW
-ufw --force enable
+sudo ufw enable
 
-# Display final UFW status
-ufw status verbose
+# Check status and rules
+sudo ufw status verbose
+
+"""
+telnet web-01-IP 22    # Should connect
+telnet web-01-IP 80    # Should connect
+telnet web-01-IP 443   # Should connect
+telnet web-01-IP 21    # Should hang or fail (filtered)
+"""
