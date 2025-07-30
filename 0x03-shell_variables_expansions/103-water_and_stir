@@ -1,2 +1,2 @@
-#!/bin/bash
-printf "%s\n" "$(( $(printf '%d' "0x${water//[[:digit:]]/}") + $(printf '%d' "0x${stir//[[:digit:]]/}") ))"
+#!/bin/sh
+printf "%s\n" "$((${water} + ${stir}))"
