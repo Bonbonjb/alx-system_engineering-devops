@@ -1,32 +1,18 @@
 #!/usr/bin/env bash
+#Configure your domain zone so that the subdomain www and display information about subdomains
 
-# Function to query a subdomain and print its DNS A record
-get_record_info() {
-    local domain=$1
-    local subdomain=$2
-
-    full_domain="${subdomain}.${domain}"
-    # Extract answer section using dig and awk
-    dig "$full_domain" | awk -v sd="$subdomain" '
-        $1 == ";;" && $2 == "ANSWER" && $3 == "SECTION:" { getline; split($5, parts, " "); print "The subdomain " sd " is a " $4 " record and points to " $5 }
-    '
-}
-
-# Ensure the first argument (domain) is provided
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
-fi
-
-domain=$1
-subdomain=$2
-
-# If subdomain is provided, only query that
-if [ -n "$subdomain" ]; then
-    get_record_info "$domain" "$subdomain"
-else
-    # Default subdomains in the required order
-    for sub in www lb-01 web-01 web-02; do
-        get_record_info "$domain" "$sub"
+if [ "$#" = 1 ]
+then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub_domain in "${subdomains[@]}"
+    do
+	record_type=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
+        destination=$(dig $sub_domain.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
+	echo "The subdomain $sub_domain is a $record_type record and points to $destination"
     done
+elif [ "$#" = 2 ]
+then
+    record_type=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $4}')
+    destination=$(dig $2.$1 | grep -A1 'ANSWER SECTION' | tail -1 | awk '{print $5}')
+    echo "The subdomain $2 is a $record_type record and points to $destination"
 fi
