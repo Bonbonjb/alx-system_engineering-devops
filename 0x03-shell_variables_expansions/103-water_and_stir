@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $((5#$(echo "$WATER" | tr 'water' '01234') + 5#$(echo "$STIR" | tr 'stir.' '01234'))) | tr '0123456789' 'bestcholac'
+awk -v w=$(echo $WATER | tr 'ewatr' 01234) -v s=$(echo $STIR | tr 'ti.r' 0123) 'BEGIN{n=w+s; a="bestchol"; while(n){r=substr(a,n%length(a)+1,1) r; n=int(n/length(a))} print r}'
